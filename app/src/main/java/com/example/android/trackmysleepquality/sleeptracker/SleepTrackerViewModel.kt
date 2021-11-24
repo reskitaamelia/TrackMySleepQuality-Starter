@@ -26,5 +26,29 @@ import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
+
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                                  savedInstanceState: Bundle?): View? {
+
+                // Get a reference to the binding object and inflate the fragment views.
+                val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
+                        inflater, R.layout.fragment_sleep_tracker, container, false
+                )
+
+                val application = requireNotNull(this.activity).application
+
+                // Create an instance of the ViewModel Factory.
+                val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
+
+                val viewModelFactory = SleepTrackerViewModelFactory(dataSource, application)
+
+                // Get a reference to the ViewModel associated with this fragment.
+                val sleepTrackerViewModel =
+                        ViewModelProvider(
+                                this, viewModelFactory
+                        ).get(SleepTrackerViewModel::class.java)
+
+                return binding.root
+        }
 }
 
